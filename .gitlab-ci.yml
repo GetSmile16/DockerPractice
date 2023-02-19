@@ -40,13 +40,13 @@ deploy-job:      # This job runs in the deploy stage.
   image: docker:stable
   environment: production
   before_script:
-    - docker login -u iv922s09@csc.sibsutis.ru -p $ACCESS_TOKEN registry.csc.sibsutis.ru
+    - docker login -u iv922s09@csc.sibsutis.ru -p ${ACCESS_TOKEN} registry.csc.sibsutis.ru
   script:
     - echo "Deploying application..."
     - echo "Build image"
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME} .
     - echo "Run container"
-    - docker run -d -p 8080:8080 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker run -d -p 8080:8080 ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
     - echo "Push project to registry"
     - docker build -t registry.csc.sibsutis.ru/iv922s09/awesomeproject .
     - docker push registry.csc.sibsutis.ru/iv922s09/awesomeproject
