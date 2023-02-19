@@ -1,3 +1,14 @@
+FROM eclipse-temurin:17-jdk-alpine as build
+WORKDIR /app
+
+COPY .mvn .mvn
+COPY mvnw .
+COPY pom.xml .
+COPY src /app/src
+
+RUN ./mvnw install -DskipTests
+
 FROM eclipse-temurin:17-jdk-alpine
-COPY target/practice-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+WORKDIR /app
+COPY --from=build /app/target/practice-0.0.1-SNAPSHOT.jar /app/app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
