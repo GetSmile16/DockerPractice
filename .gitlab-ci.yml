@@ -40,7 +40,7 @@ deploy-job:      # This job runs in the deploy stage.
   image: docker:stable
   environment: production
   before_script:
-    - docker login -u iv922s09@csc.sibsutis.ru -p ${ACCESS_TOKEN} registry.csc.sibsutis.ru
+    - docker login -u ${CI_REGISTRY_PASSWORD} -p ${CI_REGISTRY_PASSWORD} registry.csc.sibsutis.ru
   script:
     - echo "Deploying application..."
     - echo "Build image"
