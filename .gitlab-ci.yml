@@ -30,7 +30,7 @@ build-job:       # This job runs in the build stage, which runs first.
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
-  image: maven:latest
+  needs: [build-job]
   script:
     - echo "Running unit tests"
     - ./mvnw test
@@ -40,14 +40,14 @@ deploy-job:      # This job runs in the deploy stage.
   image: docker:stable
   environment: production
   before_script:
-    - docker login -u ${CI_REGISTRY_PASSWORD} -p ${CI_REGISTRY_PASSWORD} registry.csc.sibsutis.ru
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "Deploying application..."
     - echo "Build image"
-    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME} .
+    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} .
     - echo "Run container"
-    - docker run -d -p 8080:8080 ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+    - docker run -d -p 8080:8080 ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
     - echo "Push project to registry"
-    - docker build -t registry.csc.sibsutis.ru/iv922s09/awesomeproject .
-    - docker push registry.csc.sibsutis.ru/iv922s09/awesomeproject
+    - docker build -t ${CI_REGISTRY} .
+    - docker push ${CI_REGISTRY}
     - echo "Application successfully deployed."
