@@ -48,5 +48,5 @@ deploy-job:      # This job runs in the deploy stage.
     - echo "Build image"
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} .
     - echo "Push project to registry"
-    - docker push ${CI_REGISTRY}
+    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
     - echo "Application successfully deployed."
