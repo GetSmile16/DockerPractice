@@ -9,8 +9,7 @@ services:
     ports:
       - '5432:5432'
   app:
-#    image: ${NAME}:${TAG}
-    image: myapp:latest
+    image: ${NAME}:${TAG}
     build: .
     ports:
       - "8080:8080"
