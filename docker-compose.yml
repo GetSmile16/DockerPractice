@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  app:
+    image: myapp:latest
+    build: .
+    ports:
+      - "9000:8080"
+  another_app:
+    image: traefik/whoami
+    ports:
+      - "9001:80"
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx_conf/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+      - another_app
