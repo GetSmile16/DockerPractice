@@ -18,6 +18,13 @@
 
 image: maven:latest
 
+variables:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: admin
+  POSTGRES_DB: practice
+  NAME: ${CI_REGISTRY_IMAGE}
+  TAG: ${CI_COMMIT_SHA}
+
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
@@ -45,10 +52,12 @@ deploy-job:      # This job runs in the deploy stage.
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "Deploying application..."
-    - echo "Build image"
-    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} .
+    - echo "Build project"
+    - docker-compose build
     - echo "Push project to registry"
-    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
-    - echo "Delete image"
-    - docker rmi ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+    - docker push ${NAME}:${TAG}
+    - docker push postgres:latest
+    - echo "Delete images"
+    - docker rmi ${NAME}:${TAG}
+    - docker rmi postgres:latest
     - echo "Application successfully deployed."
