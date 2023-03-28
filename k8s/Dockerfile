@@ -11,8 +11,8 @@ RUN ./mvnw install -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-#RUN adduser -u 1234 -D nonroot
-#USER nonroot
+RUN adduser -u 1234 -D nonroot
+USER nonroot
 
 #ENV GOSU_VERSION 1.16
 #RUN set -eux; \
